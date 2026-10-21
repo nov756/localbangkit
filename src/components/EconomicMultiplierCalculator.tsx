@@ -3,6 +3,7 @@ import { Calculator, TrendingUp, Users, HeartHandshake, CheckCircle, Share2 } fr
 import { User } from 'firebase/auth';
 import { db, handleFirestoreError, OperationType } from '../firebase';
 import { collection, doc, setDoc, onSnapshot } from 'firebase/firestore';
+import { getAppBaseUrl } from '../config';
 
 interface EconomicMultiplierCalculatorProps {
   user?: User | null;
@@ -189,7 +190,7 @@ export const EconomicMultiplierCalculator: React.FC<EconomicMultiplierCalculator
               {hasPledged && (
                 <a
                   href={`https://wa.me/?text=${encodeURIComponent(
-                    `Saya telah bergabung berkomitmen memprioritaskan belanja di UMKM tetangga lingkungan sekitar lewat platform gotong royong LokalBangkit! 🇮🇩\n\nYuk hitung dampak perputaran ekonomi warga di sini:\n${typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app'}#dampak`
+                    `Saya telah bergabung berkomitmen memprioritaskan belanja di UMKM tetangga lingkungan sekitar lewat platform gotong royong LokalBangkit! 🇮🇩\n\nYuk hitung dampak perputaran ekonomi warga di sini:\n${getAppBaseUrl()}#dampak`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

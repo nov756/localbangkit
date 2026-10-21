@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, HeartHandshake, BookOpen, Sparkles, MessageCircle } from 'lucide-react';
 import { SectionId } from './Navbar';
+import { getAppBaseUrl } from '../config';
 
 interface HeroProps {
   totalUmkmCount: number;
@@ -57,7 +58,7 @@ export const Hero: React.FC<HeroProps> = ({ totalUmkmCount, onNavigate }) => {
 
               <a
                 href={`https://wa.me/?text=${encodeURIComponent(
-                  `Ayo dukung pedagang dan UMKM sekitar kita lewat platform LokalBangkit - Beli dari Tetangga, Bangkitkan Ekonomi Bersama! 🇮🇩\n\nBuka katalog lengkapnya di:\n${typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app'}`
+                  `Ayo dukung pedagang dan UMKM sekitar kita lewat platform LokalBangkit - Beli dari Tetangga, Bangkitkan Ekonomi Bersama! 🇮🇩\n\nBuka web direktori & katalog lengkapnya di sini:\n${getAppBaseUrl()}`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

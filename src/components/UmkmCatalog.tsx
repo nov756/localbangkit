@@ -26,6 +26,7 @@ import { UmkmDetailModal } from './UmkmDetailModal';
 import { INITIAL_REVIEWS_MAP } from '../data/initialReviews';
 import { db } from '../firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
+import { getAppBaseUrl } from '../config';
 
 interface UmkmCatalogProps {
   items: UmkmItem[];
@@ -141,7 +142,7 @@ export const UmkmCatalog: React.FC<UmkmCatalogProps> = ({
   const getWhatsappUrl = (item: UmkmItem) => {
     const rawWa = item.whatsapp.replace(/\D/g, '');
     const cleanWa = rawWa.startsWith('0') ? '62' + rawWa.slice(1) : rawWa;
-    const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app';
+    const currentUrl = getAppBaseUrl();
     const greeting = encodeURIComponent(
       `Halo ${item.name}, saya melihat profil usaha Anda di direktori gotong royong LokalBangkit (${currentUrl}). Saya ingin bertanya ketersediaan / memesan produk Anda:`
     );
@@ -149,7 +150,7 @@ export const UmkmCatalog: React.FC<UmkmCatalogProps> = ({
   };
 
   const getShareCatalogUrl = () => {
-    const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app';
+    const currentUrl = getAppBaseUrl();
     const text = encodeURIComponent(
       `Ayo dukung dan belanja di pedagang, perajin, serta UMKM tetangga sekitar kita! 🇮🇩\n\nBuka katalog lengkap LokalBangkit di sini:\n${currentUrl}#katalog`
     );

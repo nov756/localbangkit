@@ -1,24 +1,26 @@
-import React from 'react';
-import { Share2, Heart, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { Share2, Heart, ExternalLink, Copy, Check, Globe } from 'lucide-react';
 import { SectionId } from './Navbar';
+import { getAppBaseUrl, OFFICIAL_APP_URL } from '../config';
 
 interface FooterProps {
   onSelectSection?: (section: SectionId) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onSelectSection }) => {
-  const [currentUrl, setCurrentUrl] = React.useState<string>('https://lokalbangkit.vercel.app');
-
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCurrentUrl(window.location.origin);
-    }
-  }, []);
+  const [copied, setCopied] = useState<boolean>(false);
+  const currentUrl = getAppBaseUrl();
 
   const shareText = encodeURIComponent(
     `Ayo dukung pedagang dan UMKM sekitar kita lewat platform LokalBangkit - Beli dari Tetangga, Bangkitkan Ekonomi Bersama! 🇮🇩\n\nBuka web direktori & katalog lengkapnya di sini:\n${currentUrl}`
   );
   const shareUrl = `https://wa.me/?text=${shareText}`;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(currentUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
 
   const handleNav = (sec: SectionId) => {
     onSelectSection?.(sec);
@@ -45,6 +47,35 @@ export const Footer: React.FC<FooterProps> = ({ onSelectSection }) => {
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
               Proyek Aksi Nyata Mahasiswa: Pengamalan Sila ke-5 (Keadilan Sosial) dan Sila ke-3 (Persatuan Indonesia) melalui digitalisasi inklusif pedagang mikro lokal.
             </p>
+
+            {/* Official Domain Banner */}
+            <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/80 max-w-sm text-xs space-y-1.5">
+              <div className="flex items-center justify-between text-slate-300">
+                <span className="flex items-center gap-1.5 font-bold text-white">
+                  <Globe className="w-3.5 h-3.5 text-red-400" />
+                  <span>Domain Publik Aktif:</span>
+                </span>
+                <button
+                  onClick={handleCopyLink}
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-400 hover:text-red-300 transition-colors"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3 h-3 text-emerald-400" />
+                      <span className="text-emerald-400">Tersalin!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>Salin Domain</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <p className="font-mono text-[11px] text-slate-400 truncate bg-slate-900/80 p-1.5 rounded-lg border border-slate-700/50">
+                {currentUrl}
+              </p>
+            </div>
           </div>
 
           {/* Quick Navigation */}
@@ -104,16 +135,26 @@ export const Footer: React.FC<FooterProps> = ({ onSelectSection }) => {
             <p className="text-xs text-slate-400 leading-relaxed">
               Bantu tetangga mendapatkan lebih banyak pelanggan dengan membagikan platform ini ke grup WhatsApp RT, RW, atau kampus Anda.
             </p>
-            <a
-              href={shareUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold border border-slate-700 transition-colors"
-            >
-              <Share2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Bagikan ke Grup WhatsApp Warga</span>
-              <ExternalLink className="w-3 h-3 text-slate-500" />
-            </a>
+            <div className="flex flex-col gap-2">
+              <a
+                href={shareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-sm"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>Bagikan ke Grup WhatsApp Warga</span>
+                <ExternalLink className="w-3 h-3 text-emerald-200" />
+              </a>
+
+              <button
+                onClick={handleCopyLink}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition-colors"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copied ? 'Tautan Berhasil Disalin!' : 'Salin Tautan Website untuk Dibagikan'}</span>
+              </button>
+            </div>
           </div>
         </div>
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, MapPin, Clock, MessageCircle, Star, Heart, CheckCircle2, ShieldCheck, Sparkles, ShoppingBag, Plus, Minus, Share2 } from 'lucide-react';
 import { UmkmItem } from '../types';
+import { getAppBaseUrl } from '../config';
 
 interface UmkmDetailModalProps {
   umkm: UmkmItem | null;
@@ -51,7 +52,7 @@ export const UmkmDetailModal: React.FC<UmkmDetailModalProps> = ({
   const getCustomWhatsappUrl = () => {
     const rawWa = umkm.whatsapp.replace(/\D/g, '');
     const cleanWa = rawWa.startsWith('0') ? '62' + rawWa.slice(1) : rawWa;
-    const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app';
+    const currentUrl = getAppBaseUrl();
 
     const selectedList = Object.entries(selectedProducts);
     let itemsText = '';
@@ -68,7 +69,7 @@ export const UmkmDetailModal: React.FC<UmkmDetailModalProps> = ({
   };
 
   const getShareUmkmWhatsappUrl = () => {
-    const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app';
+    const currentUrl = getAppBaseUrl();
     const text = encodeURIComponent(
       `Ayo dukung UMKM sekitar kita! Rekomendasi usaha: *${umkm.name}* (${umkm.category.toUpperCase()})\n📍 Lokasi: ${umkm.location}\n💰 Tarif: ${umkm.priceRange}\n⭐ Rating: ${averageRating} / 5.0 (${reviewCount} testimoni)\n\nLihat menu dan profil lengkapnya di platform gotong royong LokalBangkit:\n${currentUrl}#katalog`
     );

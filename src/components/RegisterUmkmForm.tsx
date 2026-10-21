@@ -4,6 +4,7 @@ import { UmkmItem, UmkmCategory, PriceTier } from '../types';
 
 import { User } from 'firebase/auth';
 import { SectionId } from './Navbar';
+import { getAppBaseUrl } from '../config';
 
 interface RegisterUmkmFormProps {
   onAddUmkm: (newItem: UmkmItem) => void;
@@ -119,7 +120,7 @@ export const RegisterUmkmForm: React.FC<RegisterUmkmFormProps> = ({ onAddUmkm, o
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a
                 href={`https://wa.me/?text=${encodeURIComponent(
-                  `Halo warga! Usaha tetangga kita "${submittedItem.name}" (${submittedItem.category.toUpperCase()}) baru saja didaftarkan di direktori gotong royong LokalBangkit.\n\nAyo dukung dan belanja di warung sekitar kita:\n${typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app'}#katalog`
+                  `Halo warga! Usaha tetangga kita "${submittedItem.name}" (${submittedItem.category.toUpperCase()}) baru saja didaftarkan di direktori gotong royong LokalBangkit.\n\nAyo dukung dan belanja di warung sekitar kita:\n${getAppBaseUrl()}#katalog`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
