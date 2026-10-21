@@ -2,7 +2,7 @@
  * App configuration & Official Domain URL
  * Tautan resmi yang dapat langsung diakses publik/warga tanpa perlu deploy ke Vercel
  */
-export const OFFICIAL_APP_URL = 'https://ais-pre-wgvu7z54uul7dhbfyyzbxl-925129623634.asia-east1.run.app';
+export const OFFICIAL_APP_URL = 'https://ais-dev-wgvu7z54uul7dhbfyyzbxl-925129623634.asia-east1.run.app';
 
 /**
  * Mendapatkan URL basis aplikasi secara dinamis.
