@@ -15,6 +15,8 @@ export interface UmkmItem {
   operatingHours: string;
   specialtyTag: string;
   isCustomAdded?: boolean;
+  authorId?: string;
+  authorName?: string;
   createdAt: string;
 }
 

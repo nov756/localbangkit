@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Calculator, TrendingUp, Users, HeartHandshake, CheckCircle } from 'lucide-react';
+import { User } from 'firebase/auth';
+import { db, handleFirestoreError, OperationType } from '../firebase';
+import { collection, doc, setDoc, onSnapshot } from 'firebase/firestore';
 
-export const EconomicMultiplierCalculator: React.FC = () => {
+interface EconomicMultiplierCalculatorProps {
+  user?: User | null;
+}
+
+export const EconomicMultiplierCalculator: React.FC<EconomicMultiplierCalculatorProps> = ({ user }) => {
   const [monthlySpend, setMonthlySpend] = useState<number>(350000);
   const [pledgeCount, setPledgeCount] = useState<number>(142);
   const [hasPledged, setHasPledged] = useState<boolean>(false);
@@ -15,21 +22,52 @@ export const EconomicMultiplierCalculator: React.FC = () => {
     if (savedCount) {
       setPledgeCount(parseInt(savedCount, 10));
     }
+
+    // Real-time Firestore pledge listener
+    try {
+      const unsub = onSnapshot(
+        collection(db, 'pledges'),
+        (snapshot) => {
+          if (!snapshot.empty) {
+            setPledgeCount(142 + snapshot.size);
+          }
+        },
+        (error) => {
+          handleFirestoreError(error, OperationType.GET, 'pledges');
+        }
+      );
+      return () => unsub();
+    } catch (e) {
+      console.warn('Firestore pledges listener initializing or offline:', e);
+    }
   }, []);
 
-  const handlePledge = () => {
+  const handlePledge = async () => {
     if (!hasPledged) {
       const nextCount = pledgeCount + 1;
       setPledgeCount(nextCount);
       setHasPledged(true);
       localStorage.setItem('lokalbangkit_pledged', 'true');
       localStorage.setItem('lokalbangkit_pledge_count', nextCount.toString());
+
+      if (user) {
+        try {
+          const pledgeDoc = doc(db, 'pledges', `pledge-${user.uid}`);
+          await setDoc(pledgeDoc, {
+            id: `pledge-${user.uid}`,
+            userId: user.uid,
+            userName: user.displayName || 'Warga Gotong Royong',
+            monthlySpend,
+            createdAt: new Date().toISOString(),
+          });
+        } catch (err) {
+          handleFirestoreError(err, OperationType.WRITE, 'pledges');
+        }
+      }
     }
   };
 
   // Economic multiplier math:
-  // Local independent businesses recirculate ~68% of revenue back into the local economy (suppliers, wages, local rent)
-  // vs big non-local chains which recirculate only ~15-20%
   const annualLocalRetained = Math.round(monthlySpend * 12 * 0.68);
   const chainRetained = Math.round(monthlySpend * 12 * 0.18);
   const economicSurplus = annualLocalRetained - chainRetained;

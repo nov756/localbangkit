@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { Send, CheckCircle2, AlertCircle, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { UmkmItem, UmkmCategory, PriceTier } from '../types';
 
+import { User } from 'firebase/auth';
+import { SectionId } from './Navbar';
+
 interface RegisterUmkmFormProps {
   onAddUmkm: (newItem: UmkmItem) => void;
+  onNavigate?: (section: SectionId) => void;
+  user?: User | null;
 }
 
-export const RegisterUmkmForm: React.FC<RegisterUmkmFormProps> = ({ onAddUmkm }) => {
+export const RegisterUmkmForm: React.FC<RegisterUmkmFormProps> = ({ onAddUmkm, onNavigate, user }) => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState<UmkmCategory>('kuliner');
   const [whatsapp, setWhatsapp] = useState('');
@@ -68,6 +73,8 @@ export const RegisterUmkmForm: React.FC<RegisterUmkmFormProps> = ({ onAddUmkm })
       operatingHours: operatingHours.trim() || '08:00 - 18:00 WIB',
       specialtyTag: `${category.toUpperCase()} Pilihan Warga`,
       isCustomAdded: true,
+      authorId: user?.uid || 'warga-lokal',
+      authorName: user?.displayName || user?.email || 'Warga Sekitar',
       createdAt: new Date().toISOString().split('T')[0],
     };
 
@@ -110,13 +117,15 @@ export const RegisterUmkmForm: React.FC<RegisterUmkmFormProps> = ({ onAddUmkm })
               Data usaha telah langsung diterbitkan ke Katalog UMKM dan tersimpan di perangkat Anda. Warga lain kini dapat menemukan dan menghubungi usaha ini.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-              <a
-                href="#katalog"
+              <button
+                type="button"
+                onClick={() => onNavigate?.('katalog')}
                 className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors"
               >
                 Lihat di Katalog
-              </a>
+              </button>
               <button
+                type="button"
                 onClick={() => setSubmittedItem(null)}
                 className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold hover:bg-slate-50 transition-colors"
               >

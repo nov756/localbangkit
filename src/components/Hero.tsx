@@ -1,13 +1,15 @@
 import React from 'react';
-import { ArrowRight, ShoppingBag, HeartHandshake, ShieldCheck } from 'lucide-react';
+import { ArrowRight, HeartHandshake, BookOpen, Sparkles } from 'lucide-react';
+import { SectionId } from './Navbar';
 
 interface HeroProps {
   totalUmkmCount: number;
+  onNavigate?: (section: SectionId) => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ totalUmkmCount }) => {
+export const Hero: React.FC<HeroProps> = ({ totalUmkmCount, onNavigate }) => {
   return (
-    <section id="home" className="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden">
+    <section id="home" className="relative pt-8 pb-16 md:pt-14 md:pb-20 overflow-hidden">
       {/* Background soft ambient gradient */}
       <div
         className="absolute inset-0 -z-10 bg-radial from-red-100/40 via-transparent to-transparent dark:from-red-950/20 pointer-events-none"
@@ -15,7 +17,7 @@ export const Hero: React.FC<HeroProps> = ({ totalUmkmCount }) => {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Headlines & Call to Actions */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-400">
@@ -37,21 +39,29 @@ export const Hero: React.FC<HeroProps> = ({ totalUmkmCount }) => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
-              <a
-                href="#katalog"
+              <button
+                onClick={() => onNavigate?.('katalog')}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-bold text-white bg-red-700 hover:bg-red-800 active:bg-red-900 rounded-xl shadow-md hover:shadow-lg transition-all"
               >
                 <span>Jelajahi UMKM Lokal</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </button>
 
-              <a
-                href="#daftar"
+              <button
+                onClick={() => onNavigate?.('daftar')}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm transition-all"
               >
                 <HeartHandshake className="w-4 h-4 text-red-700 dark:text-red-400" />
                 <span>Bantu Daftarkan Usaha</span>
-              </a>
+              </button>
+
+              <button
+                onClick={() => onNavigate?.('pancasila')}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-red-700 dark:hover:text-red-400 transition-colors"
+              >
+                <BookOpen className="w-4 h-4" />
+                <span>Pelajari Nilai Pancasila</span>
+              </button>
             </div>
 
             {/* Micro proof points */}

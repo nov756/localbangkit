@@ -1,11 +1,21 @@
 import React from 'react';
 import { Share2, Heart, ExternalLink } from 'lucide-react';
+import { SectionId } from './Navbar';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onSelectSection?: (section: SectionId) => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onSelectSection }) => {
   const shareText = encodeURIComponent(
     'Ayo dukung pedagang dan UMKM sekitar kita lewat platform LokalBangkit - Beli dari Tetangga, Bangkitkan Ekonomi Bersama!'
   );
   const shareUrl = `https://wa.me/?text=${shareText}`;
+
+  const handleNav = (sec: SectionId) => {
+    onSelectSection?.(sec);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 transition-colors">
@@ -13,14 +23,17 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-slate-800">
           {/* Brand & Mission */}
           <div className="md:col-span-5 space-y-3">
-            <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleNav('beranda')}
+              className="flex items-center gap-2 text-left"
+            >
               <span className="w-7 h-7 rounded-lg bg-red-700 flex items-center justify-center text-white font-black text-xs">
                 LB
               </span>
               <span className="text-xl font-black text-white tracking-tight">
                 Lokal<span className="text-red-500">Bangkit</span>
               </span>
-            </div>
+            </button>
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
               Proyek Aksi Nyata Mahasiswa: Pengamalan Sila ke-5 (Keadilan Sosial) dan Sila ke-3 (Persatuan Indonesia) melalui digitalisasi inklusif pedagang mikro lokal.
             </p>
@@ -29,33 +42,48 @@ export const Footer: React.FC = () => {
           {/* Quick Navigation */}
           <div className="md:col-span-3 space-y-2">
             <p className="text-xs font-bold text-white uppercase tracking-wider mb-2">
-              Navigasi Cepat
+              Navigasi Halaman
             </p>
             <ul className="space-y-1.5 text-xs">
               <li>
-                <a href="#home" className="hover:text-red-400 transition-colors">
+                <button
+                  onClick={() => handleNav('beranda')}
+                  className="hover:text-red-400 transition-colors"
+                >
                   Beranda
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#pancasila" className="hover:text-red-400 transition-colors">
+                <button
+                  onClick={() => handleNav('pancasila')}
+                  className="hover:text-red-400 transition-colors"
+                >
                   Nilai Luhur Pancasila
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#dampak" className="hover:text-red-400 transition-colors">
+                <button
+                  onClick={() => handleNav('dampak')}
+                  className="hover:text-red-400 transition-colors"
+                >
                   Kalkulator Dampak Warga
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#katalog" className="hover:text-red-400 transition-colors">
+                <button
+                  onClick={() => handleNav('katalog')}
+                  className="hover:text-red-400 transition-colors"
+                >
                   Katalog UMKM
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#daftar" className="hover:text-red-400 transition-colors">
+                <button
+                  onClick={() => handleNav('daftar')}
+                  className="hover:text-red-400 transition-colors"
+                >
                   Daftarkan Usaha Sekitar
-                </a>
+                </button>
               </li>
             </ul>
           </div>

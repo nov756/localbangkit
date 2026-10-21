@@ -1,0 +1,67 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "email"]
+    },
+    "Umkm": {
+      "title": "Umkm",
+      "description": "UMKM business profile registered by community",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "enum": ["kuliner", "jasa", "kerajinan", "sembako"] },
+        "description": { "type": "string", "maxLength": 1000 },
+        "location": { "type": "string", "maxLength": 200 },
+        "priceRange": { "type": "string", "maxLength": 50 },
+        "priceTier": { "type": "string", "enum": ["ekonomis", "menengah", "premium"] },
+        "whatsapp": { "type": "string", "maxLength": 20 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "operatingHours": { "type": "string", "maxLength": 50 },
+        "specialtyTag": { "type": "string", "maxLength": 100 },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "isCustomAdded": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "description", "location", "whatsapp"]
+    },
+    "Pledge": {
+      "title": "Pledge",
+      "description": "Community gotong royong commitment pledge",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "monthlySpend": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "monthlySpend"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profile data"
+    },
+    "/umkm/{umkmId}": {
+      "schema": { "$ref": "#/entities/Umkm" },
+      "description": "Public community UMKM directory listings"
+    },
+    "/pledges/{pledgeId}": {
+      "schema": { "$ref": "#/entities/Pledge" },
+      "description": "Citizen gotong royong economic pledges"
+    }
+  }
+}
