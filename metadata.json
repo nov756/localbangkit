@@ -1,0 +1,6 @@
+{
+  "name": "LokalBangkit - Pancasila dalam Aksi Digital",
+  "description": "Platform gotong royong digital pendukung keberlanjutan UMKM lokal di sekitar kita sebagai wujud nyata pengamalan Pancasila.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
