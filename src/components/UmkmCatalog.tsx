@@ -141,10 +141,19 @@ export const UmkmCatalog: React.FC<UmkmCatalogProps> = ({
   const getWhatsappUrl = (item: UmkmItem) => {
     const rawWa = item.whatsapp.replace(/\D/g, '');
     const cleanWa = rawWa.startsWith('0') ? '62' + rawWa.slice(1) : rawWa;
+    const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app';
     const greeting = encodeURIComponent(
-      `Halo ${item.name}, saya melihat profil usaha Anda di direktori LokalBangkit. Saya ingin bertanya ketersediaan / memesan produk Anda:`
+      `Halo ${item.name}, saya melihat profil usaha Anda di direktori gotong royong LokalBangkit (${currentUrl}). Saya ingin bertanya ketersediaan / memesan produk Anda:`
     );
     return `https://wa.me/${cleanWa}?text=${greeting}`;
+  };
+
+  const getShareCatalogUrl = () => {
+    const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app';
+    const text = encodeURIComponent(
+      `Ayo dukung dan belanja di pedagang, perajin, serta UMKM tetangga sekitar kita! 🇮🇩\n\nBuka katalog lengkap LokalBangkit di sini:\n${currentUrl}#katalog`
+    );
+    return `https://wa.me/?text=${text}`;
   };
 
   const handleReviewAdded = (umkmId: string, newAvgRating: number, newCount: number) => {
@@ -277,17 +286,30 @@ export const UmkmCatalog: React.FC<UmkmCatalogProps> = ({
               )}
             </div>
 
-            <button
-              onClick={() => setOnlyFavorites(!onlyFavorites)}
-              className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-colors whitespace-nowrap ${
-                onlyFavorites
-                  ? 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-400 border-red-300 dark:border-red-800'
-                  : 'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
-              }`}
-            >
-              <Heart className={`w-4 h-4 ${onlyFavorites ? 'fill-red-600 text-red-600' : ''}`} />
-              <span>Langganan Tersimpan ({favorites.length})</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setOnlyFavorites(!onlyFavorites)}
+                className={`inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold border transition-colors whitespace-nowrap ${
+                  onlyFavorites
+                    ? 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-400 border-red-300 dark:border-red-800'
+                    : 'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                <Heart className={`w-4 h-4 ${onlyFavorites ? 'fill-red-600 text-red-600' : ''}`} />
+                <span>Langganan ({favorites.length})</span>
+              </button>
+
+              <a
+                href={getShareCatalogUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors whitespace-nowrap shadow-xs"
+                title="Bagikan katalog UMKM ini ke WhatsApp warga"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Bagikan ke WA</span>
+              </a>
+            </div>
           </div>
 
           {/* Bottom row: Category Tabs + Price Selector */}

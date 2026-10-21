@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, MapPin, Clock, MessageCircle, Star, Heart, CheckCircle2, ShieldCheck, Sparkles, ShoppingBag, Plus, Minus } from 'lucide-react';
+import { X, MapPin, Clock, MessageCircle, Star, Heart, CheckCircle2, ShieldCheck, Sparkles, ShoppingBag, Plus, Minus, Share2 } from 'lucide-react';
 import { UmkmItem } from '../types';
 
 interface UmkmDetailModalProps {
@@ -51,6 +51,7 @@ export const UmkmDetailModal: React.FC<UmkmDetailModalProps> = ({
   const getCustomWhatsappUrl = () => {
     const rawWa = umkm.whatsapp.replace(/\D/g, '');
     const cleanWa = rawWa.startsWith('0') ? '62' + rawWa.slice(1) : rawWa;
+    const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app';
 
     const selectedList = Object.entries(selectedProducts);
     let itemsText = '';
@@ -61,9 +62,17 @@ export const UmkmDetailModal: React.FC<UmkmDetailModalProps> = ({
     }
 
     const greeting = encodeURIComponent(
-      `Halo ${umkm.name}, saya melihat profil usaha Anda di direktori gotong royong LokalBangkit.${itemsText}\n\nApakah stok / jadwal saat ini tersedia? Terima kasih banyak!`
+      `Halo ${umkm.name}, saya melihat profil usaha Anda di direktori gotong royong LokalBangkit (${currentUrl}).${itemsText}\n\nApakah stok / jadwal saat ini tersedia? Terima kasih banyak!`
     );
     return `https://wa.me/${cleanWa}?text=${greeting}`;
+  };
+
+  const getShareUmkmWhatsappUrl = () => {
+    const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app';
+    const text = encodeURIComponent(
+      `Ayo dukung UMKM sekitar kita! Rekomendasi usaha: *${umkm.name}* (${umkm.category.toUpperCase()})\n📍 Lokasi: ${umkm.location}\n💰 Tarif: ${umkm.priceRange}\n⭐ Rating: ${averageRating} / 5.0 (${reviewCount} testimoni)\n\nLihat menu dan profil lengkapnya di platform gotong royong LokalBangkit:\n${currentUrl}#katalog`
+    );
+    return `https://wa.me/?text=${text}`;
   };
 
   const totalCalculated = calculateTotalOrder();
@@ -314,18 +323,30 @@ export const UmkmDetailModal: React.FC<UmkmDetailModalProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href={getShareUmkmWhatsappUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 text-xs font-bold transition-colors shadow-xs"
+              title="Bagikan profil UMKM ini ke WhatsApp warga"
+            >
+              <Share2 className="w-4 h-4" />
+              <span>Bagikan Profil</span>
+            </a>
+
             <button
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+              className="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
             >
               Tutup
             </button>
+
             <a
               href={getCustomWhatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md transition-colors"
             >
               <MessageCircle className="w-4 h-4" />
               <span>{selectedCount > 0 ? 'Kirim Pesanan ke WA' : 'Chat Penjual via WA'}</span>

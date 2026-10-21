@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, CheckCircle2, AlertCircle, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Send, CheckCircle2, AlertCircle, Sparkles, Image as ImageIcon, MessageCircle } from 'lucide-react';
 import { UmkmItem, UmkmCategory, PriceTier } from '../types';
 
 import { User } from 'firebase/auth';
@@ -117,19 +117,32 @@ export const RegisterUmkmForm: React.FC<RegisterUmkmFormProps> = ({ onAddUmkm, o
               Data usaha telah langsung diterbitkan ke Katalog UMKM dan tersimpan di perangkat Anda. Warga lain kini dapat menemukan dan menghubungi usaha ini.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  `Halo warga! Usaha tetangga kita "${submittedItem.name}" (${submittedItem.category.toUpperCase()}) baru saja didaftarkan di direktori gotong royong LokalBangkit.\n\nAyo dukung dan belanja di warung sekitar kita:\n${typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app'}#katalog`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-xs"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Bagikan ke WhatsApp Warga</span>
+              </a>
+
               <button
                 type="button"
                 onClick={() => onNavigate?.('katalog')}
-                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold hover:bg-slate-800 transition-colors"
               >
                 Lihat di Katalog
               </button>
+
               <button
                 type="button"
                 onClick={() => setSubmittedItem(null)}
                 className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold hover:bg-slate-50 transition-colors"
               >
-                Daftarkan UMKM Lainnya
+                Daftarkan Lainnya
               </button>
             </div>
           </div>

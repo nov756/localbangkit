@@ -7,8 +7,16 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onSelectSection }) => {
+  const [currentUrl, setCurrentUrl] = React.useState<string>('https://lokalbangkit.vercel.app');
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentUrl(window.location.origin);
+    }
+  }, []);
+
   const shareText = encodeURIComponent(
-    'Ayo dukung pedagang dan UMKM sekitar kita lewat platform LokalBangkit - Beli dari Tetangga, Bangkitkan Ekonomi Bersama!'
+    `Ayo dukung pedagang dan UMKM sekitar kita lewat platform LokalBangkit - Beli dari Tetangga, Bangkitkan Ekonomi Bersama! 🇮🇩\n\nBuka web direktori & katalog lengkapnya di sini:\n${currentUrl}`
   );
   const shareUrl = `https://wa.me/?text=${shareText}`;
 

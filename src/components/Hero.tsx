@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, HeartHandshake, BookOpen, Sparkles } from 'lucide-react';
+import { ArrowRight, HeartHandshake, BookOpen, Sparkles, MessageCircle } from 'lucide-react';
 import { SectionId } from './Navbar';
 
 interface HeroProps {
@@ -38,7 +38,7 @@ export const Hero: React.FC<HeroProps> = ({ totalUmkmCount, onNavigate }) => {
               Platform digital gotong royong untuk mendukung keberlanjutan UMKM lokal di sekitar lingkungan kita. Wujud nyata pengamalan Keadilan Sosial bagi Seluruh Rakyat Indonesia.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
               <button
                 onClick={() => onNavigate?.('katalog')}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-bold text-white bg-red-700 hover:bg-red-800 active:bg-red-900 rounded-xl shadow-md hover:shadow-lg transition-all"
@@ -55,13 +55,17 @@ export const Hero: React.FC<HeroProps> = ({ totalUmkmCount, onNavigate }) => {
                 <span>Bantu Daftarkan Usaha</span>
               </button>
 
-              <button
-                onClick={() => onNavigate?.('pancasila')}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-red-700 dark:hover:text-red-400 transition-colors"
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  `Ayo dukung pedagang dan UMKM sekitar kita lewat platform LokalBangkit - Beli dari Tetangga, Bangkitkan Ekonomi Bersama! 🇮🇩\n\nBuka katalog lengkapnya di:\n${typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app'}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800 rounded-xl transition-colors shadow-xs"
               >
-                <BookOpen className="w-4 h-4" />
-                <span>Pelajari Nilai Pancasila</span>
-              </button>
+                <MessageCircle className="w-4 h-4 text-emerald-600" />
+                <span>Bagikan ke WA</span>
+              </a>
             </div>
 
             {/* Micro proof points */}

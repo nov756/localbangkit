@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calculator, TrendingUp, Users, HeartHandshake, CheckCircle } from 'lucide-react';
+import { Calculator, TrendingUp, Users, HeartHandshake, CheckCircle, Share2 } from 'lucide-react';
 import { User } from 'firebase/auth';
 import { db, handleFirestoreError, OperationType } from '../firebase';
 import { collection, doc, setDoc, onSnapshot } from 'firebase/firestore';
@@ -185,6 +185,20 @@ export const EconomicMultiplierCalculator: React.FC<EconomicMultiplierCalculator
                   </>
                 )}
               </button>
+
+              {hasPledged && (
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(
+                    `Saya telah bergabung berkomitmen memprioritaskan belanja di UMKM tetangga lingkungan sekitar lewat platform gotong royong LokalBangkit! 🇮🇩\n\nYuk hitung dampak perputaran ekonomi warga di sini:\n${typeof window !== 'undefined' ? window.location.origin : 'https://lokalbangkit.vercel.app'}#dampak`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-xs"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Ajak Warga Lain Berkomitmen via WA</span>
+                </a>
+              )}
             </div>
           </div>
 
