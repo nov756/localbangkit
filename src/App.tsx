@@ -55,7 +55,11 @@ export default function App() {
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
+            // Merge newly registered custom items with our updated canonical initial examples
+            const customItems = parsed.filter(
+              (item: UmkmItem) => item.isCustomAdded || !INITIAL_UMKM_LIST.some((init) => init.id === item.id)
+            );
+            return [...customItems, ...INITIAL_UMKM_LIST];
           }
         } catch (e) {
           console.error('Failed to parse saved UMKM list', e);
@@ -126,9 +130,12 @@ export default function App() {
               const data = docSnap.data() as UmkmItem;
               firestoreItems.push(data);
             });
-            // Merge with initial items if needed
-            setUmkmList(firestoreItems);
-            localStorage.setItem('lokalbangkit_umkm', JSON.stringify(firestoreItems));
+            // Keep canonical examples updated while retaining any custom citizen registrations
+            const canonicalIds = new Set(INITIAL_UMKM_LIST.map((i) => i.id));
+            const customItems = firestoreItems.filter((i) => !canonicalIds.has(i.id));
+            const merged = [...customItems, ...INITIAL_UMKM_LIST];
+            setUmkmList(merged);
+            localStorage.setItem('lokalbangkit_umkm', JSON.stringify(merged));
           } else {
             // First time seeding initial dataset to Firestore
             for (const item of INITIAL_UMKM_LIST) {
@@ -426,6 +433,7 @@ export default function App() {
                   items={umkmList}
                   favorites={favorites}
                   onToggleFavorite={handleToggleFavorite}
+                  user={user}
                 />
               )}
 
@@ -484,6 +492,7 @@ export default function App() {
                 items={umkmList}
                 favorites={favorites}
                 onToggleFavorite={handleToggleFavorite}
+                user={user}
               />
               <RegisterUmkmForm
                 onAddUmkm={handleAddUmkm}

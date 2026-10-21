@@ -48,6 +48,22 @@
         "createdAt": { "type": "string" }
       },
       "required": ["id", "userId", "monthlySpend"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Community star rating and review testimonial for an UMKM",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "umkmId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string", "maxLength": 100 },
+        "userPhoto": { "type": "string", "maxLength": 500 },
+        "rating": { "type": "number", "minimum": 1, "maximum": 5 },
+        "comment": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "umkmId", "userId", "userName", "rating", "comment"]
     }
   },
   "firestore": {
@@ -58,6 +74,10 @@
     "/umkm/{umkmId}": {
       "schema": { "$ref": "#/entities/Umkm" },
       "description": "Public community UMKM directory listings"
+    },
+    "/umkm/{umkmId}/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Customer reviews and star ratings for an UMKM"
     },
     "/pledges/{pledgeId}": {
       "schema": { "$ref": "#/entities/Pledge" },

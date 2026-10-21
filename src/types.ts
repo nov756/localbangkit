@@ -2,6 +2,24 @@ export type UmkmCategory = 'kuliner' | 'jasa' | 'kerajinan' | 'sembako';
 
 export type PriceTier = 'ekonomis' | 'menengah' | 'premium';
 
+export interface UmkmReview {
+  id: string;
+  umkmId: string;
+  userId: string;
+  userName: string;
+  userPhoto?: string;
+  rating: number; // 1 to 5
+  comment: string;
+  createdAt: string;
+}
+
+export interface UmkmProduct {
+  name: string;
+  price: number;
+  unit?: string;
+  description?: string;
+}
+
 export interface UmkmItem {
   id: string;
   name: string;
@@ -14,9 +32,16 @@ export interface UmkmItem {
   imageUrl: string;
   operatingHours: string;
   specialtyTag: string;
+  featuredBadge?: string;
   isCustomAdded?: boolean;
   authorId?: string;
   authorName?: string;
+  averageRating?: number;
+  reviewCount?: number;
+  menuHighlights?: string[];
+  products?: UmkmProduct[];
+  distance?: string;
+  isOpenNow?: boolean;
   createdAt: string;
 }
 

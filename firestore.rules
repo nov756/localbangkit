@@ -45,6 +45,16 @@ service cloud.firestore {
         && data.monthlySpend is number && data.monthlySpend > 0 && data.monthlySpend <= 100000000;
     }
 
+    function isValidReview(data) {
+      return data.keys().hasAll(['id', 'umkmId', 'userId', 'userName', 'rating', 'comment'])
+        && data.id is string && data.id.size() <= 128
+        && data.umkmId is string && data.umkmId.size() <= 128
+        && data.userId is string && data.userId.size() <= 128
+        && data.userName is string && data.userName.size() > 0 && data.userName.size() <= 100
+        && data.rating is number && data.rating >= 1 && data.rating <= 5
+        && data.comment is string && data.comment.size() > 0 && data.comment.size() <= 500;
+    }
+
     // Default deny
     match /{document=**} {
       allow read, write: if false;
@@ -72,6 +82,19 @@ service cloud.firestore {
       allow delete: if isSignedIn()
         && isValidId(umkmId)
         && (existing().authorId == request.auth.uid || isAdmin());
+
+      // Subcollection for customer reviews & star ratings
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow create: if isSignedIn()
+          && isValidId(reviewId)
+          && isValidReview(incoming())
+          && incoming().userId == request.auth.uid
+          && incoming().umkmId == umkmId;
+        allow update, delete: if isSignedIn()
+          && isValidId(reviewId)
+          && (existing().userId == request.auth.uid || isAdmin());
+      }
     }
 
     // Community economic pledges
