@@ -5,13 +5,20 @@ import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 
-// CRITICAL: Specify firestoreDatabaseId with long-polling auto-detect for resilient connection in proxied sandbox
+// CRITICAL: Specify firestoreDatabaseId (or undefined for (default)) with long-polling auto-detect for resilient connection
+const databaseId =
+  firebaseConfig.firestoreDatabaseId &&
+  firebaseConfig.firestoreDatabaseId !== '(default)' &&
+  firebaseConfig.firestoreDatabaseId !== ''
+    ? firebaseConfig.firestoreDatabaseId
+    : undefined;
+
 export const db = initializeFirestore(
   app,
   {
     experimentalAutoDetectLongPolling: true,
   },
-  firebaseConfig.firestoreDatabaseId
+  databaseId
 );
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
