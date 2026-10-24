@@ -11,14 +11,17 @@ interface AuthStatusProps {
 export const AuthStatus: React.FC<AuthStatusProps> = ({ user, loading }) => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSignIn = async () => {
     try {
       setIsLoggingIn(true);
+      setErrorMessage(null);
       await loginWithGoogle();
     } catch (err: any) {
       console.error('Google sign in error:', err);
-      alert('Gagal login dengan Google: ' + (err?.message || 'Terjadi kesalahan'));
+      setErrorMessage(err?.message || 'Gagal login dengan Google');
+      setTimeout(() => setErrorMessage(null), 5000);
     } finally {
       setIsLoggingIn(false);
     }
@@ -41,15 +44,22 @@ export const AuthStatus: React.FC<AuthStatusProps> = ({ user, loading }) => {
 
   if (!user) {
     return (
-      <button
-        onClick={handleSignIn}
-        disabled={isLoggingIn}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors shadow-xs"
-        title="Masuk dengan Akun Google"
-      >
-        <LogIn className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
-        <span className="hidden sm:inline">Masuk Google</span>
-      </button>
+      <div className="relative">
+        <button
+          onClick={handleSignIn}
+          disabled={isLoggingIn}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors shadow-xs"
+          title="Masuk dengan Akun Google"
+        >
+          <LogIn className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+          <span className="hidden sm:inline">Masuk Google</span>
+        </button>
+        {errorMessage && (
+          <div className="absolute right-0 top-full mt-1.5 w-60 p-2 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-[11px] text-red-700 dark:text-red-300 shadow-lg z-50">
+            {errorMessage}
+          </div>
+        )}
+      </div>
     );
   }
 

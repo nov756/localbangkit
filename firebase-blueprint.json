@@ -64,9 +64,21 @@
         "createdAt": { "type": "string" }
       },
       "required": ["id", "umkmId", "userId", "userName", "rating", "comment"]
+    },
+    "TestProbe": {
+      "title": "TestProbe",
+      "description": "Probe for verifying Firestore backend connectivity",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string" }
+      }
     }
   },
   "firestore": {
+    "/test/{testId}": {
+      "schema": { "$ref": "#/entities/TestProbe" },
+      "description": "Health check probes for connection testing"
+    },
     "/users/{userId}": {
       "schema": { "$ref": "#/entities/UserProfile" },
       "description": "User profile data"

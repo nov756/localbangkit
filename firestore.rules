@@ -60,6 +60,11 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Connection health probe
+    match /test/{testId} {
+      allow read: if true;
+    }
+
     // User profiles: owner only or admin
     match /users/{userId} {
       allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());

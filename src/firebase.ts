@@ -1,12 +1,18 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
-import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { initializeFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 
-// CRITICAL: The app will break without specifying the firestoreDatabaseId
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+// CRITICAL: Specify firestoreDatabaseId with long-polling auto-detect for resilient connection in proxied sandbox
+export const db = initializeFirestore(
+  app,
+  {
+    experimentalAutoDetectLongPolling: true,
+  },
+  firebaseConfig.firestoreDatabaseId
+);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
@@ -49,13 +55,19 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
   throw new Error(JSON.stringify(errInfo));
 }
 
-// Connection test on boot
+// Connection test on boot with resilient error suppression
 export async function testFirestoreConnection() {
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.warn('Firestore connection: client is offline or initializing.');
+  } catch (error: unknown) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    if (
+      errMsg.includes('client is offline') ||
+      errMsg.includes('unavailable') ||
+      errMsg.includes('permission-denied') ||
+      errMsg.includes('Could not reach')
+    ) {
+      console.warn('Firestore connection: operating in resilient offline/cache fallback mode.');
     }
   }
 }

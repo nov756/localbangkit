@@ -185,9 +185,11 @@ export default function App() {
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
+      document.documentElement.style.colorScheme = 'dark';
       localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.style.colorScheme = 'light';
       localStorage.setItem('theme', 'light');
     }
   }, [darkMode]);
@@ -239,17 +241,21 @@ export default function App() {
   };
 
   const sectionsList: { id: SectionId; name: string; icon: React.ElementType }[] = [
-    { id: 'beranda', name: '1. Beranda', icon: Home },
-    { id: 'pancasila', name: '2. Nilai Pancasila', icon: BookOpen },
-    { id: 'dampak', name: '3. Dampak Ekonomi', icon: Calculator },
-    { id: 'katalog', name: '4. Katalog UMKM', icon: ShoppingBag },
-    { id: 'daftar', name: '5. Daftarkan UMKM', icon: PlusCircle },
-    { id: 'asisten-ai', name: '6. Asisten AI', icon: Bot },
+    { id: 'pancasila', name: 'Nilai Pancasila', icon: BookOpen },
+    { id: 'dampak', name: 'Dampak Ekonomi', icon: Calculator },
+    { id: 'katalog', name: 'Katalog UMKM', icon: ShoppingBag },
+    { id: 'daftar', name: 'Daftarkan UMKM', icon: PlusCircle },
+    { id: 'asisten-ai', name: 'Asisten AI', icon: Bot },
   ];
 
   const currentIndex = sectionsList.findIndex((s) => s.id === activeSection);
   const prevSection = currentIndex > 0 ? sectionsList[currentIndex - 1] : null;
-  const nextSection = currentIndex < sectionsList.length - 1 ? sectionsList[currentIndex + 1] : null;
+  const nextSection =
+    activeSection === 'beranda'
+      ? sectionsList[0]
+      : currentIndex >= 0 && currentIndex < sectionsList.length - 1
+      ? sectionsList[currentIndex + 1]
+      : null;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 flex flex-col justify-between relative">
@@ -263,62 +269,64 @@ export default function App() {
           authLoading={authLoading}
         />
 
-        {/* Section Navigation Strip */}
-        <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-16 z-40 shadow-xs">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              {/* Stepper Tabs */}
-              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-                {sectionsList.map((sec) => {
-                  const Icon = sec.icon;
-                  const isActive = activeSection === sec.id;
-                  return (
-                    <button
-                      key={sec.id}
-                      onClick={() => handleSelectSection(sec.id)}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-                        isActive
-                          ? 'bg-red-700 text-white shadow-xs'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <Icon className="w-3.5 h-3.5 shrink-0" />
-                      <span>{sec.name}</span>
-                    </button>
-                  );
-                })}
-              </div>
+        {/* Section Navigation Strip (hanya tampil di sub-halaman, karena Beranda sudah ada di Navbar paling atas) */}
+        {activeSection !== 'beranda' && (
+          <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-16 z-40 shadow-xs">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                {/* Stepper Tabs */}
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+                  {sectionsList.map((sec) => {
+                    const Icon = sec.icon;
+                    const isActive = activeSection === sec.id;
+                    return (
+                      <button
+                        key={sec.id}
+                        onClick={() => handleSelectSection(sec.id)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                          isActive
+                            ? 'bg-red-700 text-white shadow-xs'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        <Icon className="w-3.5 h-3.5 shrink-0" />
+                        <span>{sec.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
 
-              {/* View Mode Toggle: Halaman Terpisah vs Mode Gulir Lengkap */}
-              <div className="hidden lg:flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/90 rounded-lg text-xs font-medium self-end sm:self-auto shrink-0">
-                <button
-                  onClick={() => setViewMode('separated')}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors ${
-                    viewMode === 'separated'
-                      ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-bold'
-                      : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
-                  title="Tampilkan satu section per halaman secara terpisah"
-                >
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>Halaman Terpisah</span>
-                </button>
-                <button
-                  onClick={() => setViewMode('all')}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors ${
-                    viewMode === 'all'
-                      ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-bold'
-                      : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
-                  title="Tampilkan semua section sekaligus (scroll)"
-                >
-                  <LayoutGrid className="w-3.5 h-3.5" />
-                  <span>Mode Gulir Lengkap</span>
-                </button>
+                {/* View Mode Toggle: Halaman Terpisah vs Mode Gulir Lengkap */}
+                <div className="hidden lg:flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/90 rounded-lg text-xs font-medium self-end sm:self-auto shrink-0">
+                  <button
+                    onClick={() => setViewMode('separated')}
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors ${
+                      viewMode === 'separated'
+                        ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-bold'
+                        : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    }`}
+                    title="Tampilkan satu section per halaman secara terpisah"
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>Halaman Terpisah</span>
+                  </button>
+                  <button
+                    onClick={() => setViewMode('all')}
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors ${
+                      viewMode === 'all'
+                        ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-bold'
+                        : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    }`}
+                    title="Tampilkan semua section sekaligus (scroll)"
+                  >
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                    <span>Mode Gulir Lengkap</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Main Content Area */}
         <main className="min-h-[60vh]">
@@ -450,7 +458,15 @@ export default function App() {
               {/* Section Stepper / Bottom Pagination */}
               <div className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-                  {prevSection ? (
+                  {activeSection !== 'beranda' && (currentIndex === 0 ? (
+                    <button
+                      onClick={() => handleSelectSection('beranda')}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      <span>Kembali ke: Beranda</span>
+                    </button>
+                  ) : prevSection ? (
                     <button
                       onClick={() => handleSelectSection(prevSection.id)}
                       className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
@@ -460,7 +476,7 @@ export default function App() {
                     </button>
                   ) : (
                     <div />
-                  )}
+                  ))}
 
                   {nextSection ? (
                     <button

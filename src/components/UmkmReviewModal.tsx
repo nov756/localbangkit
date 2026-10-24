@@ -150,7 +150,7 @@ export const UmkmReviewModal: React.FC<UmkmReviewModalProps> = ({
       await loginWithGoogle();
     } catch (err: any) {
       console.error('Login error in review modal:', err);
-      alert('Gagal login dengan Google: ' + (err?.message || 'Terjadi kesalahan'));
+      setErrorMsg('Gagal login dengan Google: ' + (err?.message || 'Terjadi kesalahan'));
     }
   };
 
