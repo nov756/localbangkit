@@ -164,6 +164,7 @@ export const RegisterUmkmForm: React.FC<RegisterUmkmFormProps> = ({ onAddUmkm, o
                 Nama Usaha / Pedagang *
               </label>
               <input
+                id="input-nama-umkm"
                 type="text"
                 required
                 value={name}

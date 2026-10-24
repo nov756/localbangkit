@@ -201,7 +201,29 @@ export default function App() {
   const handleSelectSection = (section: SectionId) => {
     setActiveSection(section);
     window.location.hash = section === 'beranda' ? 'home' : section;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (viewMode === 'all') {
+      const targetId = section === 'beranda' ? 'home' : section;
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    if (section === 'daftar') {
+      setTimeout(() => {
+        const formSection = document.getElementById('daftar');
+        if (formSection) {
+          formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        const inputEl = document.getElementById('input-nama-umkm') as HTMLInputElement | null;
+        if (inputEl) {
+          inputEl.focus();
+        }
+      }, 60);
+    }
   };
 
   const handleAddUmkm = async (newItem: UmkmItem) => {
